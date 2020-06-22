@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Behat course-related step definition overrides for the Iomad Bootstrap theme.
+ * Behat grade related step definition overrides for the IomadBootstrap theme.
  *
  * @package    theme_iomadbootstrap
  * @category   test
@@ -25,25 +25,33 @@
 
 // NOTE: no MOODLE_INTERNAL test here, this file may be required by behat before including /config.php.
 
-require_once(__DIR__ . '/../../../../course/tests/behat/behat_course.php');
+require_once(__DIR__ . '/../../../../grade/tests/behat/behat_grade.php');
+
+use Behat\Gherkin\Node\TableNode as TableNode;
 
 /**
- * Course-related step definition overrides for the Iomad Bootstrap theme.
+ * Behat grade overrides for the IomadBootstrap theme.
  *
  * @package    theme_iomadbootstrap
  * @category   test
  * @copyright  2019 Michael Hawkins
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class behat_theme_iomadbootstrap_behat_course extends behat_course {
+class behat_theme_iomadbootstrap_behat_grade extends behat_grade {
 
     /**
-     * Go to the course participants.
+     * Navigates to the course gradebook and selects a specified item from the grade navigation tabs.
+     *
+     * @param string $gradepath
      */
-    public function i_navigate_to_course_participants() {
-        $coursestr = behat_context_helper::escape(get_string('courses'));
-        $mycoursestr = behat_context_helper::escape(get_string('mycourses'));
-        $xpath = "//div[contains(@class,'block')]//li[p/*[string(.)=$coursestr or string(.)=$mycoursestr]]";
-        $this->execute('behat_general::i_click_on_in_the', [get_string('participants'), 'link', $xpath, 'xpath_element']);
+    public function i_navigate_to_in_the_course_gradebook($gradepath) {
+        // If we are not on one of the gradebook pages already, follow "Grades" link in the navigation block.
+        $xpath = '//div[contains(@class,\'grade-navigation\')]';
+        if (!$this->getSession()->getPage()->findAll('xpath', $xpath)) {
+            $this->execute("behat_general::i_click_on_in_the", array(get_string('grades'), 'link',
+                    get_string('pluginname', 'block_navigation'), 'block'));
+        }
+
+        $this->select_in_gradebook_tabs($gradepath);
     }
 }

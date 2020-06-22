@@ -15,17 +15,36 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * IomadBootstrap theme.
+ * Overridden fontawesome icons.
  *
- * @package    theme_iomadbootstrap
- * @copyright  2018 Bas Brands
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     theme_iomadbootstrap
+ * @copyright   2019 Moodle
+ * @author      Bas Brands <bas@moodle.com>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+namespace theme_iomadbootstrap\output;
 
-// This line protects the file from being accessed by a URL directly.
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2019111800;
-$plugin->requires = 2019111200;
-$plugin->component = 'theme_iomadbootstrap';
-$plugin->dependencies = array('theme_boost' => 2019111200);
+/**
+ * Class overriding some of the Moodle default FontAwesome icons.
+ *
+ * @package    theme_iomadbootstrap
+ * @copyright  2019 Moodle
+ * @author     Bas Brands <bas@moodle.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class icon_system_fontawesome extends \core\output\icon_system_fontawesome {
+    /**
+     * Change the core icon map.
+     *
+     * @return Array replaced icons.
+     */
+    public function get_core_icon_map() {
+        $iconmap = parent::get_core_icon_map();
+
+        $iconmap['core:i/navigationitem'] = 'fa-square';
+
+        return $iconmap;
+    }
+}
